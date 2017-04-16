@@ -1,6 +1,7 @@
 package com.example.komod.paradin;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +23,13 @@ public class LocationPasser extends Service implements LocationListener {
     private static final String TAG = "LocationPasser";
 
     private LocationManager mLocationManager;
+    private final Location mLastLocation = new Location("MyLocation");
+
+    public class MyBinder extends Binder {
+        LocationPasser getService() {
+            return LocationPasser.this;
+        }
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -37,7 +46,7 @@ public class LocationPasser extends Service implements LocationListener {
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "onBind");
-        return null;
+        return new MyBinder();
     }
 
     @Override
@@ -61,6 +70,11 @@ public class LocationPasser extends Service implements LocationListener {
         Log.i(TAG, "Accuracy " + String.valueOf(location.getAccuracy()));
         Log.i(TAG, "Time " + String.valueOf(location.getTime()));
         Log.i(TAG, "Provider " + location.getProvider());
+        mLastLocation.setLongitude(location.getLongitude());
+        mLastLocation.setLatitude(location.getLatitude());
+        mLastLocation.setAccuracy(location.getAccuracy());
+        mLastLocation.setTime(location.getTime());
+        mLastLocation.setProvider(location.getProvider());
     }
 
     public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -70,5 +84,9 @@ public class LocationPasser extends Service implements LocationListener {
     }
 
     public void onProviderDisabled(String provider) {
+    }
+
+    public Location getLocation() {
+        return mLastLocation;
     }
 }
