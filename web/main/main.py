@@ -1,7 +1,7 @@
 import datetime
 
 from google.cloud import datastore
-from flask import Flask, request
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 client = datastore.Client('paradin-me')
@@ -12,6 +12,10 @@ LONGITUDE_KEY = 'longitude'
 @app.route('/')
 def hello():
     return 'Hello World!'
+
+@app.route('/moonportma')
+def render_moonportma():
+    return render_template('moonportma.html')
 
 @app.route('/route/api/v1.0/anchor', methods=['POST'])
 def add_anchor():
