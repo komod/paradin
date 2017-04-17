@@ -26,6 +26,8 @@ function initMap() {
       routePath.setMap(map);
       if (data.length > 0) {
         snapAndDraw(data);
+      } else {
+        setTimeout(redrawRoute, TIMEOUT_DURATION);
       }
   });
 }
@@ -44,6 +46,7 @@ function snapAndDraw(path) {
   }, function(data) {
     processSnapToRoadResponse(data);
     drawSnappedPolyline();
+    setTimeout(redrawRoute, TIMEOUT_DURATION);
   });
 }
 
@@ -62,3 +65,17 @@ function processSnapToRoadResponse(data) {
 function drawSnappedPolyline() {
   routePath.setPath(snappedCoordinates);
 }
+
+function redrawRoute() {
+  $.get(HOST_URL + '/route/api/v1.0/anchor',
+    {
+      'limit': 100
+    }, function(data) {
+      if (data.length > 0) {
+        snapAndDraw(data);
+      } else {
+        setTimeout(redrawRoute, TIMEOUT_DURATION)
+      }
+  });
+}
+
