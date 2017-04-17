@@ -35,12 +35,10 @@ public class MainActivity extends AppCompatActivity {
     private final Runnable updateLocation = new Runnable() {
         @Override
         public void run() {
-            Log.d(TAG, "Run update location");
-            // Repeat this the same runnable code block again another 2 seconds
             if (mLocationPasser != null) {
                 Location location = mLocationPasser.getLocation();
-                ((TextView) findViewById(R.id.longitude_text_view)).setText(String.valueOf(location.getLongitude()));
                 ((TextView) findViewById(R.id.latitude_text_view)).setText(String.valueOf(location.getLatitude()));
+                ((TextView) findViewById(R.id.longitude_text_view)).setText(String.valueOf(location.getLongitude()));
                 ((TextView) findViewById(R.id.accuracy_text_view)).setText(String.valueOf(location.getAccuracy()));
                 ((TextView) findViewById(R.id.source_text_view)).setText(location.getProvider() + ": " + String.valueOf(location.getTime()));
             }
