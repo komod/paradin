@@ -3,6 +3,7 @@ var TIMEOUT_DURATION = 30000;
 var map;
 var routePath;
 var snappedCoordinates;
+var currentMarker;
 
 function initMap() {
   $.get(HOST_URL + '/route/api/v1.0/anchor',
@@ -24,6 +25,10 @@ function initMap() {
         strokeWeight: 6
       });
       routePath.setMap(map);
+
+      currentMarker = new google.maps.Marker();
+      currentMarker.setMap(map); 
+
       if (data.length > 0) {
         snapAndDraw(data);
       } else {
@@ -34,6 +39,8 @@ function initMap() {
 
 // Snap a user-created polyline to roads and draw the snapped path
 function snapAndDraw(path) {
+  currentMarker.setPosition(new google.maps.LatLng(path[0]['latitude'], path[0]['longitude']));
+
   var pathValues = [];
   for (var i = 0; i < path.length; ++i) {
     pathValues.push(path[i]['latitude'] + ',' + path[i]['longitude']);
